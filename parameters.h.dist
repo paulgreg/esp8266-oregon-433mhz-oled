@@ -1,1 +1,11 @@
 #define RF_RX_PIN 2
+
+#define HOST "example.com"
+#define URL "/json-store/temperature/temperature.json"
+#define AUTHORIZATION "Basic username:password-encoded-in-base64"
+
+#define REQUEST_TIMEOUT 2000
+
+#define WIFI_SSID  "ssid"
+#define WIFI_PASSWORD "password"
+

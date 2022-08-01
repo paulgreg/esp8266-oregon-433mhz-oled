@@ -1,3 +1,5 @@
+#include <ErriezOregonTHN128Esp32Receive.h> // forked from for esp8266 https://github.com/Erriez/ErriezOregonTHN128
+
 struct SensorData {
   uint32_t rxCount;
   char temp[10];
@@ -17,7 +19,6 @@ SensorData formatSensorData(OregonTHN128Data_t *rawData)
 {
     SensorData sensorData;
     bool negativeTemperature = false;
-    static uint32_t rxCount = 0;
     int16_t tempAbs;
     char temp[10];
 
@@ -30,7 +31,6 @@ SensorData formatSensorData(OregonTHN128Data_t *rawData)
 
     snprintf_P(sensorData.temp, sizeof(sensorData.temp), PSTR("%s%d.%d"), (negativeTemperature ? "-" : ""), (tempAbs / 10), (tempAbs % 10));
 
-    sensorData.rxCount = rxCount;
     sensorData.channel = rawData->channel;
     sensorData.lowBattery = rawData->lowBattery;
     return sensorData;
