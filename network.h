@@ -4,8 +4,10 @@
 HTTPClient http;
 
 boolean connectToWifi() {
-  Serial.print("\nconnecting to ");
-  Serial.println(WIFI_SSID);
+  if (SERIAL) {
+    Serial.print("\nconnecting to ");
+    Serial.println(WIFI_SSID);
+  }
 
   WiFi.forceSleepWake();
   delay(1);
@@ -15,22 +17,24 @@ boolean connectToWifi() {
   unsigned int retries = 100;
   while (WiFi.status() != WL_CONNECTED && (retries-- > 0)) {
     delay(200);
-    Serial.print(".");
+    if (SERIAL) Serial.print(".");
   }
   if (WiFi.status() != WL_CONNECTED) {
-    Serial.println("\nWifi connection failed");
+    if (SERIAL) Serial.println("\nWifi connection failed");
     return false;
   }
-  Serial.println("");
-  Serial.println("wifi connected");
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
-  Serial.println("");
+  if (SERIAL) {
+    Serial.println("");
+    Serial.println("wifi connected");
+    Serial.print("IP address: ");
+    Serial.println(WiFi.localIP());
+    Serial.println("");
+  }
   return true;
 }
 
 boolean disconnectWifi() {
-  Serial.println("\nWifi sleep");
+  if (SERIAL) Serial.println("\nWifi sleep");
   WiFi.disconnect();
   delay(1); 
   WiFi.forceSleepBegin();
@@ -43,10 +47,10 @@ boolean postData(SensorData *sensorData) {
   WiFiClientSecure client;
   client.setInsecure();
 
-  Serial.println("POSTing data");
+  if (SERIAL) Serial.println("POSTing data");
   
   if (!client.connect(HOST, 443)) {
-    Serial.println("Connection failed");
+    if (SERIAL) Serial.println("Connection failed");
     return false;
   }
 
@@ -67,14 +71,14 @@ boolean postData(SensorData *sensorData) {
   "\r\n" +
   payload;
 
-  Serial.println(request);
+  if (SERIAL) Serial.println(request);
   client.print(request);
 
   unsigned long timeout = millis();
   while (client.available() == 0) {
     delay(1);
     if (millis() - timeout > REQUEST_TIMEOUT) {
-      Serial.println("client Timeout !");
+      if (SERIAL) Serial.println("client Timeout !");
       client.stop();
       return false;
     }
@@ -82,10 +86,10 @@ boolean postData(SensorData *sensorData) {
   
   while(client.available()){
     String line = client.readStringUntil('\r');
-    Serial.print(line);
+    if (SERIAL) Serial.print(line);
   }
   
-  Serial.println("Closing connection");
+  if (SERIAL) Serial.println("Closing connection");
   client.stop();
   
   return true;

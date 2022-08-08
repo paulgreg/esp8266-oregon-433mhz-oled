@@ -12,7 +12,7 @@ void printReceivedData(SensorData *sensorData)
     char msg[80];
     snprintf_P(msg, sizeof(msg), PSTR("RX %lu, Channel %d, Temp: %s, Low batt: %d"),
                sensorData->rxCount, sensorData->channel, sensorData->temp, sensorData->lowBattery);
-    Serial.println(msg);
+    if (SERIAL) Serial.println(msg);
 }
 
 SensorData formatSensorData(OregonTHN128Data_t *rawData)

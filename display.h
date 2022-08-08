@@ -16,8 +16,8 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 void setupScreen() {
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
-  if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) { 
-    Serial.println(F("SSD1306 allocation failed"));
+  if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
+    if (SERIAL) Serial.println(F("SSD1306 allocation failed"));
     for(;;); // Don't proceed, loop forever
   }
   display.display();
@@ -27,19 +27,16 @@ void setupScreen() {
 int loopIdx = 0;
 
 void displayTemperature(SensorData *sensorData) {
-  char temp[20], rx[40], ch[40];
+  char temp[20], ch[40];
 
-  snprintf_P(temp, sizeof(temp), PSTR("T: %s"), sensorData->temp);
-  snprintf_P(rx, sizeof(rx), PSTR("RX:%lu"), sensorData->rxCount);
+  snprintf_P(temp, sizeof(temp), PSTR("Temp:%s"), sensorData->temp);
   snprintf_P(ch, sizeof(ch), PSTR("Ch. %d - Low batt: %d"), sensorData->channel, sensorData->lowBattery);
 
   display.setTextSize(2);
-  display.setCursor(0, 0);
+  display.setCursor(0, 15);
   display.print(temp);
   display.setTextSize(1);
-  display.setCursor(0, 25);
-  display.print(rx);
-  display.setCursor(0, 40);
+  display.setCursor(0, 45);
   display.print(ch);
 }
 
