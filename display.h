@@ -22,28 +22,49 @@ void setupScreen() {
   }
   display.display();
   display.cp437(true);
-}
-
-int loopIdx = 0;
-
-void displayTemperature(SensorData *sensorData) {
-  char temp[20], ch[40];
-
-  snprintf_P(temp, sizeof(temp), PSTR("Temp:%s"), sensorData->temp);
-  snprintf_P(ch, sizeof(ch), PSTR("Ch. %d - Low batt: %d"), sensorData->channel, sensorData->lowBattery);
-
-  display.setTextSize(2);
-  display.setCursor(0, 15);
-  display.print(temp);
-  display.setTextSize(1);
-  display.setCursor(0, 45);
-  display.print(ch);
-}
-
-
-void displayData(SensorData *sensorData) {
-  display.clearDisplay();
   display.setTextColor(WHITE);
-  displayTemperature(sensorData);
+}
+
+void testCharacters() {
+  for (int i=0; i< 255; i++) {
+    display.clearDisplay();
+    display.setTextSize(2);
+    display.setCursor(0, 10);
+    display.print(i);
+    display.setCursor(0, 30);
+    display.write((char) i);    
+    display.display();
+    delay(500);
+  }
+}
+
+void displayData(SensorData *sensorData, String msg) {
+  char ch[40];
+  snprintf_P(ch, sizeof(ch), sensorData->lowBattery == 0 ? PSTR("Ch. %d") : PSTR("Ch. %d - Low battery"), sensorData->channel);
+
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setCursor(0, 10);
+
+  display.print("T");
+  display.setCursor(12, 5);
+  display.write((char) 9);
+  display.setCursor(20, 10);
+  display.print(":");
+  display.print(sensorData->temp);
+  
+  display.setTextSize(1);
+  display.setCursor(0, 40);
+  display.print(ch);
+  display.setCursor(0, 55);
+  display.print(msg);
+  display.display();
+}
+
+void displaySearching() {
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setCursor(0, 20);
+  display.print("Searching");
   display.display();
 }

@@ -34,11 +34,32 @@ boolean connectToWifi() {
 }
 
 boolean disconnectWifi() {
-  if (SERIAL) Serial.println("\nWifi sleep");
-  WiFi.disconnect();
-  delay(1); 
+  if (SERIAL) Serial.println("\nWifi disconnected");
+  WiFi.disconnect(); 
+  delay(1000);
+  if (SERIAL) Serial.println("\nWifi off");
+  WiFi.mode(WIFI_OFF);
+  if (SERIAL) Serial.println("\nWifi forceSleepBegin");
   WiFi.forceSleepBegin();
-  delay(1); //For some reason the modem won't go to sleep unless you do a delay
+  delay(100);
+
+/* trying to stop wifi cause that exception :
+Exception (0):
+epc1=0x40201471 epc2=0x00000000 epc3=0x00000000 excvaddr=0x00000000 depc=0x00000000
+
+>>>stack>>>
+
+ctx: cont
+sp: 3ffffdc0 end: 3fffffc0 offset: 0190
+3fffff50:  3fffdad0 00000001 3ffee9cf 40201471  
+3fffff60:  3fffdad0 00000001 3ffee8c0 40201c20  
+3fffff70:  00000000 6e657320 00000000 3ffeec8c  
+3fffff80:  00000000 372e3732 00000000 40100350  
+3fffff90:  00000001 00000000 3ffeec78 40100371  
+3fffffa0:  feefeffe 00000000 3ffeec78 4020732c  
+3fffffb0:  feefeffe feefeffe 3ffe85e0 401012cd  
+<<<stack<<<
+*/
 }
 
 
