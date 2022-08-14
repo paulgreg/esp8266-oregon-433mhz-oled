@@ -4,11 +4,11 @@
 HTTPClient http;
 
 boolean connectToWifi() {
-  if (SERIAL) {
-    Serial.print("\nconnecting to ");
-    Serial.println(WIFI_SSID);
-  }
-
+  #if SERIAL 
+  Serial.print("\nconnecting to ");
+  Serial.println(WIFI_SSID);
+  #endif
+  
   WiFi.forceSleepWake();
   delay(1);
   WiFi.mode(WIFI_STA);
@@ -17,31 +17,25 @@ boolean connectToWifi() {
   unsigned int retries = 100;
   while (WiFi.status() != WL_CONNECTED && (retries-- > 0)) {
     delay(200);
-    if (SERIAL) Serial.print(".");
+    #if SERIAL 
+    Serial.print(".");
+    #endif
   }
   if (WiFi.status() != WL_CONNECTED) {
-    if (SERIAL) Serial.println("\nWifi connection failed");
+    #if SERIAL 
+    Serial.println("\nWifi connection failed");
+    #endif
     return false;
   }
-  if (SERIAL) {
-    Serial.println("");
-    Serial.println("wifi connected");
-    Serial.print("IP address: ");
-    Serial.println(WiFi.localIP());
-    Serial.println("");
-  }
+  #if SERIAL 
+  Serial.println("");
+  Serial.println("wifi connected");
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
+  Serial.println("");
+  #endif
   return true;
 }
-
-boolean disconnectWifi() {
-  if (SERIAL) Serial.println("\nWifi disconnected");
-  WiFi.disconnect(); 
-  delay(1000);
-  if (SERIAL) Serial.println("\nWifi off");
-  WiFi.mode(WIFI_OFF);
-  if (SERIAL) Serial.println("\nWifi forceSleepBegin");
-  WiFi.forceSleepBegin();
-  delay(100);
 
 /* trying to stop wifi cause that exception :
 Exception (0):
@@ -60,18 +54,36 @@ sp: 3ffffdc0 end: 3fffffc0 offset: 0190
 3fffffb0:  feefeffe feefeffe 3ffe85e0 401012cd  
 <<<stack<<<
 */
+boolean disconnectWifi() {
+  #if SERIAL 
+  Serial.println("\nWifi disconnected");
+  #endif
+  WiFi.disconnect(); 
+  delay(1000);
+  #if SERIAL 
+  Serial.println("\nWifi off");
+  #endif
+  WiFi.mode(WIFI_OFF);
+  #if SERIAL 
+  Serial.println("\nWifi forceSleepBegin");
+  #endif
+  WiFi.forceSleepBegin();
+  delay(100);
 }
-
 
 boolean postData(SensorData *sensorData) {
   boolean success = false;
   WiFiClientSecure client;
   client.setInsecure();
 
-  if (SERIAL) Serial.println("POSTing data");
+  #if SERIAL 
+  Serial.println("POSTing data");
+  #endif
   
   if (!client.connect(HOST, 443)) {
-    if (SERIAL) Serial.println("Connection failed");
+    #if SERIAL 
+    Serial.println("Connection failed");
+    #endif
     return false;
   }
 
@@ -92,14 +104,18 @@ boolean postData(SensorData *sensorData) {
   "\r\n" +
   payload;
 
-  if (SERIAL) Serial.println(request);
+  #if SERIAL 
+  Serial.println(request);
+  #endif
   client.print(request);
 
   unsigned long timeout = millis();
   while (client.available() == 0) {
     delay(1);
     if (millis() - timeout > REQUEST_TIMEOUT) {
-      if (SERIAL) Serial.println("client Timeout !");
+      #if SERIAL
+      Serial.println("client Timeout !");
+      #endif
       client.stop();
       return false;
     }
@@ -107,10 +123,14 @@ boolean postData(SensorData *sensorData) {
   
   while(client.available()){
     String line = client.readStringUntil('\r');
-    if (SERIAL) Serial.print(line);
+    #if SERIAL 
+    Serial.print(line);
+    #endif
   }
   
-  if (SERIAL) Serial.println("Closing connection");
+  #if SERIAL 
+  Serial.println("Closing connection");
+  #endif
   client.stop();
   
   return true;

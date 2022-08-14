@@ -17,12 +17,19 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 void setupScreen() {
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
   if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
-    if (SERIAL) Serial.println(F("SSD1306 allocation failed"));
+    #if SERIAL
+    Serial.println(F("SSD1306 allocation failed"));
+    #endif
     for(;;); // Don't proceed, loop forever
   }
+  display.ssd1306_command(SSD1306_DISPLAYON);
   display.display();
   display.cp437(true);
   display.setTextColor(WHITE);
+}
+
+void sleepScreen() {
+  display.ssd1306_command(SSD1306_DISPLAYOFF);
 }
 
 void testCharacters() {
@@ -39,23 +46,26 @@ void testCharacters() {
 }
 
 void displayData(SensorData *sensorData, String msg) {
-  char ch[40];
+  char ch[40], rx[40];
   snprintf_P(ch, sizeof(ch), sensorData->lowBattery == 0 ? PSTR("Ch. %d") : PSTR("Ch. %d - Low battery"), sensorData->channel);
+  snprintf_P(rx, sizeof(rx), PSTR("Rx. %d"), sensorData->rxCount);
 
   display.clearDisplay();
   display.setTextSize(2);
-  display.setCursor(0, 10);
+  display.setCursor(0, 5);
 
   display.print("T");
-  display.setCursor(12, 5);
+  display.setCursor(12, 0);
   display.write((char) 9);
-  display.setCursor(20, 10);
+  display.setCursor(20, 5);
   display.print(":");
   display.print(sensorData->temp);
   
   display.setTextSize(1);
-  display.setCursor(0, 40);
+  display.setCursor(0, 25);
   display.print(ch);
+  display.setCursor(0, 40);
+  display.print(rx);
   display.setCursor(0, 55);
   display.print(msg);
   display.display();

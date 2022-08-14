@@ -1,5 +1,8 @@
 #define RF_RX_PIN 2
 
+#define SERIAL false
+#define SCREEN true
+
 #define HOST "example.com"
 #define URL "/json-store/temperature/temperature.json"
 #define AUTHORIZATION "Basic username:password-encoded-in-base64"
