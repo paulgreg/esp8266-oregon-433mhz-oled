@@ -4,7 +4,7 @@ That project is using an esp8266, an RF module 433Mhz receiver and an OLED scree
 
 It uses the great [ErriezOregonTHN128](https://github.com/Erriez/ErriezOregonTHN128) library to fetch and decode Oregon Scientific radio data.
 
-Here’s the [hackaday project page](https://hackaday.io/project/171910-esp32-weather-station) with more details and pictures.
+Here’s the [hackaday project page](https://hackaday.io/project/186753-oregon-scientific-sensor-to-internet) with more details and pictures.
 
 
 ## Arduino env
