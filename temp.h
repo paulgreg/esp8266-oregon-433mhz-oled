@@ -1,4 +1,4 @@
-#include <ErriezOregonTHN128Esp32Receive.h> // forked from for esp8266 https://github.com/Erriez/ErriezOregonTHN128
+#include <ErriezOregonTHN128Receive.h>
 
 struct SensorData {
   uint32_t rxCount;
