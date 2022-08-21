@@ -46,6 +46,7 @@ void loop() {
       displayData(&sensorData, "");
       delay(SECOND);
 
+      #ifdef HOST
       if ((rxCount % 100) == 0) {
         displayData(&sensorData, "Connecting");
         if (connectToWifi()) {
@@ -64,6 +65,7 @@ void loop() {
           displayData(&sensorData, "Connection error");
         }
       }
+      #endif
       
       rxCount++;
       OregonTHN128_RxEnable();

@@ -71,6 +71,7 @@ boolean disconnectWifi() {
   delay(100);
 }
 
+#ifdef HOST
 boolean postData(SensorData *sensorData) {
   boolean success = false;
   WiFiClientSecure client;
@@ -135,3 +136,4 @@ boolean postData(SensorData *sensorData) {
   
   return true;
 }
+#endif
